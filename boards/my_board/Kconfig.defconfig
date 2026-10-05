@@ -1,0 +1,3 @@
+if BOARD_MY_BOARD
+source "boards/common/usb/Kconfig.cdc_acm_serial.defconfig"
+endif # BOARD_MY_BOARD

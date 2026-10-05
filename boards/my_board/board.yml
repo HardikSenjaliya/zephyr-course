@@ -1,0 +1,6 @@
+board:
+  name: my_board
+  full_name: My STEVAL STWINBX1 From Scratch
+  vendor: custom
+  socs:
+    - name: stm32u585xx
