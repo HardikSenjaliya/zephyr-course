@@ -1,0 +1,6 @@
+name: our_driver
+build:
+  cmake: .
+  kconfig: Kconfig
+  settings:
+    dts_root: . 

@@ -1,0 +1,4 @@
+config OUR_DRIVER
+    bool "Enable our custom driver"
+    default y
+    depends on SENSOR

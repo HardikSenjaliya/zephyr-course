@@ -1,0 +1,12 @@
+/ {
+	aliases {
+		app-led = &our_led;
+	};
+
+	our-leds {
+		our_led: led_2 {
+			compatible = "our,driver";
+			gpios = <&gpioh 10 GPIO_ACTIVE_HIGH>;
+		};
+	};
+};

@@ -1,0 +1,12 @@
+description: |
+  Group of custom LEDs.
+
+  Each LED is defined in a child node of the custom-leds node.
+
+compatible: "our,driver"
+
+properties:
+  gpios:
+    type: phandle-array
+    required: true
+      
