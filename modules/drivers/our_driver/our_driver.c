@@ -34,6 +34,13 @@ static int our_driver_channel_get(const struct device *dev, enum sensor_channel 
     return 0; // Return 0 on success
 }
 
+int our_driver_increment_count(const struct device *dev) {
+    struct our_driver_data *data = dev->data;
+    data->sample_count++;
+    LOG_INF("Sample count incremented to %u", data->sample_count);
+    return 0; // Return 0 on success
+}
+
 static int our_driver_init(const struct device *dev) {
     // Implement the initialization logic for the driver
     LOG_INF("Initializing our driver");
@@ -62,6 +69,7 @@ static DEVICE_API(sensor, our_driver_api) = {
 };
 
 #define DEV_INST(inst)                                                  \
+    static struct our_driver_data our_driver_data_##inst;               \
     static const struct gpio_dt_spec gpio_dt_spec_##inst[] = {          \
         GPIO_DT_SPEC_INST_GET_BY_IDX(inst, gpios, 0),                   \
     };                                                                  \
@@ -73,7 +81,7 @@ static DEVICE_API(sensor, our_driver_api) = {
     DEVICE_DT_INST_DEFINE(inst,                                         \
                           our_driver_init,                              \
                           NULL,                                         \
-                          NULL,                                         \
+                          &our_driver_data_##inst,                      \
                           &our_driver_cfg_##inst,                       \
                           POST_KERNEL,                                  \
                           CONFIG_SENSOR_INIT_PRIORITY,                 \
