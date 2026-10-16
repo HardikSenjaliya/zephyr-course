@@ -6,4 +6,4 @@ set(ZEPHYR_EXTRA_MODULES "${CMAKE_CURRENT_SOURCE_DIR}/../../modules")
 find_package(Zephyr REQUIRED)
 project(my_zephyr_app)
 
-target_sources(app PRIVATE src/main.c)
+target_sources(app PRIVATE src/main.c src/shell_cmd.c)
