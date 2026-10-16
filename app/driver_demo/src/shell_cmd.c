@@ -5,7 +5,51 @@
 #include <zephyr/sys/printk.h>
 #include <errno.h>
 
+#include "our_driver.h"
+
 static const struct device *led = DEVICE_DT_GET(DT_ALIAS(app_led));
+
+#define SENSOR_VALUE_MIN 0
+#define SENSOR_VALUE_MAX 1
+
+static int cmd_sensor_set(const struct shell *sh,
+                          size_t argc, char **argv)
+{
+    if (argc != 2) {
+        shell_error(sh, "Usage: sensor set <value>");
+        return -EINVAL;
+    }
+
+    char *endptr;
+    errno = 0;
+    long value = strtol(argv[1], &endptr, 10);
+
+    if (errno != 0 || endptr == argv[1] || *endptr != '\0') {
+        shell_error(sh, "Value must be an integer");
+        return -EINVAL;
+    }
+
+    if (value < SENSOR_VALUE_MIN || value > SENSOR_VALUE_MAX) {
+        shell_error(sh, "Value must be between %d and %d",
+                    SENSOR_VALUE_MIN, SENSOR_VALUE_MAX);
+        return -EINVAL;
+    }
+
+    if (!device_is_ready(led)) {
+        shell_error(sh, "Sensor device is not ready");
+        return -ENODEV;
+    }
+
+    int ret = our_driver_set_value(led, (int)value);
+
+    if (ret < 0) {
+        shell_error(sh, "Failed to set value: %d", ret);
+        return ret;
+    }
+
+    shell_print(sh, "Value set to %ld", value);
+    return 0;
+}
 
 /* sensor fetch */
 static int cmd_sensor_fetch(const struct shell *sh,
@@ -83,6 +127,9 @@ SHELL_STATIC_SUBCMD_SET_CREATE(sensor_subcmds,
     SHELL_CMD(info, NULL,
               "Show device name and ready state",
               cmd_sensor_info),
+    SHELL_CMD_ARG(set, NULL,
+                  "Set a value (0 or 1)",
+                  cmd_sensor_set, 2, 0),
     SHELL_SUBCMD_SET_END
 );
 

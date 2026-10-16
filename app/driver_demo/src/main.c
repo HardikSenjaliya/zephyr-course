@@ -3,8 +3,6 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/sensor.h>
 
-#include "our_driver.h"
-
 static const struct device *led = DEVICE_DT_GET(DT_ALIAS(app_led));
 
 int main(void)
@@ -16,11 +14,9 @@ int main(void)
     }
 
     while (1) {
-        sensor_channel_get(led, SENSOR_CHAN_ACCEL_XYZ, NULL);
-        k_msleep(1000);
-        sensor_sample_fetch(led);
+        // sensor_channel_get(led, SENSOR_CHAN_ACCEL_XYZ, NULL);
+        // sensor_sample_fetch(led);
         k_msleep(1000); 
-        our_driver_increment_count(led);
     }
 
 

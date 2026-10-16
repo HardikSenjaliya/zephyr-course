@@ -34,10 +34,17 @@ static int our_driver_channel_get(const struct device *dev, enum sensor_channel 
     return 0; // Return 0 on success
 }
 
-int our_driver_increment_count(const struct device *dev) {
-    struct our_driver_data *data = dev->data;
-    data->sample_count++;
-    LOG_INF("Sample count incremented to %u", data->sample_count);
+int our_driver_set_value(const struct device *dev, int value) {
+
+    const struct our_driver_led_cfg *config = dev->config;
+	const struct gpio_dt_spec *led = config->led;
+
+    int err = gpio_pin_set_dt(led, value);
+    if (err) {
+        LOG_ERR("Cannot set GPIO (err %d)", err);
+        return err;
+    }
+
     return 0; // Return 0 on success
 }
 
